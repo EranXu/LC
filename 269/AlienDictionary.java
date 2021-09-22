@@ -14,12 +14,10 @@ public String alienOrder(String[] words) {
     }
     // 相邻2单词比较，统计排在每种字母后面的所有字母
     for(int i=1;i<words.length;i++){
-        // 前单词
-        String pre = words[i-1];
-        // 当前单词
-        String current=words[i];
-        // 单词下标
-        int index=0;
+        String pre = words[i-1];// 前单词
+        String current=words[i];// 当前单词
+        int index=0;// 单词下标
+        
         // 比较2单词同一下标
         while(index<pre.length() && index<current.length()){
             // 前单词当前字符
