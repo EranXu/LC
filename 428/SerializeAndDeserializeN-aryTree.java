@@ -42,12 +42,12 @@ class Codec {
         //找父母和孩子的分界点
         int index=data.indexOf("[");
         //如果没孩子,唯一情况是只有一个根结点
-        if(index==-1) return new Node(Integer.parseInt(data),new ArrayList<>());
+        if(index==-1) return new Node(Integer.parseInt(data), new ArrayList<>());
         //如果有孩子，要截出父母和孩子
         String val = data.substring(0,data.indexOf("["));//左包右不包
         Node root=new Node(Integer.parseInt(val),new ArrayList<>());
         //注意左包右不包，所以index是[，不能算。len-1是]不会包
-        List<String> dataLst=parse(data.substring(index+1,data.length()-1);
+        List<String> dataLst=parse(data.substring(index+1,data.length()-1));
         for(String c:dataLst){
             root.children.add(deserialize(c));//递归
         }
@@ -61,15 +61,19 @@ class Codec {
         StringBuilder str=new StringBuilder();
         int bracketPair=0;
         for(char c: data.toCharArray()){
-            if(c=="[") bracketPair++;//难点
-            else if(c=="]") bracketPair--;
-            else if(c==","){
-                dataLst.add(str.toString());
-                str.setLength(0);//清零重新存下一个字符串
-                continue;//不让sb存逗号，但保留“[]”作为识别孩子的hint
+            if(c=='[') bracketPair++;//难点
+            else if(c==']') bracketPair--;
+            else if(c==','){
+                if(bracketPair==0){//这句不能忘，保证在孩子的孩子[]框外
+                    dataLst.add(str.toString());
+                    str.setLength(0);//清零重新存下一个字符串
+                    continue;//不让sb存逗号，但保留“[]”作为识别孩子的hint
+                }
+                
             }
-            str.append(str);//把每个字符组合成字符串存进去
+            str.append(c);//把每个字符组合成字符串存进去
         }
+        dataLst.add(str.toString());//最后一个是没有逗号的！
         return dataLst;
     }
 }
